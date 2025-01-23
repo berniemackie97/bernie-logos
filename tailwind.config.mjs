@@ -1,3 +1,6 @@
+import { transform } from "next/dist/build/swc/generated-native";
+import { Scada } from "next/font/google";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -8,6 +11,33 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        wiggle: {
+          "0%, 100%": { transform: "rotate-(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+        },
+        heartbeat: {
+          "0%": { transform: "scale(1)", shadow: "shadow-sm" },
+          "25%": { transform: "scale(1.1)" },
+          "50%": { transform: "scale(1)" },
+          "75%": { transform: "scale(0.9)" },
+          "100%": { transform: "scale(1)" },
+        },
+        rubberband: {
+          "0%": {transform: "scale(1)"},
+          "30%": {transform: "scale(0.96)"},
+          "40%": {transform: "scale(0.97)"},
+          "50%": {transform: "scale(0.98)",},
+          "65%": {transform: "scale(0.99)"},
+          "75%": {transform: "scale(0.99)"},
+          "100%": {transform: "scale(1)"},
+        },
+      },
+      animation: {
+        heartbeat: "heartbeat 1.6s ease-out",
+        wiggle: "wiggle 200ms ease-in-out",
+        rubberband: "rubberband 0.4s ease-in-out",
+      },
       colors: {
         lightsand: {
           100: "#faf8f3",
