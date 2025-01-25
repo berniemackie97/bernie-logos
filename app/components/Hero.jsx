@@ -19,7 +19,7 @@ function Hero() {
         {Lookup.HeroDesc}
       </p>
 
-      <div className="flex gap-6 w-full max-w-2xl mt-10">
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl mt-10">
         <input
           placeholder={Lookup.InputTitlePlaceholder}
           className="bg-eggshell-400 p-3 border rounded-md w-full shadow-md outline-none"
