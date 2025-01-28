@@ -5,7 +5,7 @@ import axios from "axios";
 import Prompt from "@/app/data/Prompt";
 import { Loader2Icon } from "lucide-react";
 
-function LogoIdea({ formData, onHandleInputChange }) {
+function LogoIdea({ onHandleInputChange, formData }) {
   const [ideas, setIdeas] = useState();
   const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(formData?.idea);
@@ -19,16 +19,14 @@ function LogoIdea({ formData, onHandleInputChange }) {
       "{logoType}",
       formData?.design.title
     )
-      .replace("{logoTitle}", formData.title)
-      .replace("{logoDesc}", formData.desc)
-      .replace("{logoPrompt}", formData.design.prompt);
+      .replace("{logoTitle}", formData?.title)
+      .replace("{logoDesc}", formData?.desc)
+      .replace("{logoPrompt}", formData?.design.prompt);
 
-    // console.log(PROMPT);
     const result = await axios.post("/api/ai-design-ideas", {
       prompt: PROMPT,
     });
 
-    console.log(result.data);
     !ideas && setIdeas(result.data.ideas);
     setLoading(false);
   };
