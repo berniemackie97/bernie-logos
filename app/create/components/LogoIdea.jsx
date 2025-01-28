@@ -6,18 +6,40 @@ import Prompt from "@/app/data/Prompt";
 import { Loader2Icon } from "lucide-react";
 
 function LogoIdea({ onHandleInputChange, formData }) {
-  const [ideas, setIdeas] = useState();
+  const [ideas, setIdeas] = useState(() => {
+    // Retrieve ideas from localStorage on initial load
+    const storedIdeas = localStorage.getItem("logoIdeas");
+    return storedIdeas ? JSON.parse(storedIdeas) : null;
+  });
+
+  const [regen, setRegen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(formData?.idea);
 
   // Fetch initial logo design ideas when the component mounts
   useEffect(() => {
-    generateLogoDesignIdea();
+    if (!ideas) {
+      generateLogoDesignIdea();
+    }
   }, []);
+
+  // Save ideas to localStorage whenever they are updated
+  useEffect(() => {
+    if (ideas) {
+      localStorage.setItem("logoIdeas", JSON.stringify(ideas));
+    }
+  }, [ideas]);
 
   // Function to fetch logo design ideas
   const generateLogoDesignIdea = async () => {
-    setIdeas(null);
+    if (ideas && !regen && (selectedOption || formData?.idea)) {
+      console.log(
+        "Skipping API call as ideas and options are already available"
+      );
+      setIdeas(ideas); // Set the current ideas to state again (if needed)
+      return; // Skip API call
+    }
+
     setLoading(true);
     const PROMPT = Prompt.DESIGN_IDEA_PROMPT.replace(
       "{logoType}",
@@ -32,7 +54,8 @@ function LogoIdea({ onHandleInputChange, formData }) {
         prompt: PROMPT,
       });
 
-      setIdeas(result.data.ideas); // Update ideas state with new results
+      // Update ideas state with the new results
+      setIdeas(result.data.ideas);
     } catch (error) {
       console.error("Failed to fetch logo ideas:", error);
     }
@@ -44,11 +67,14 @@ function LogoIdea({ onHandleInputChange, formData }) {
       {/* Button to regenerate logo design ideas */}
       <div className="flex justify-end">
         <button
-          onClick={generateLogoDesignIdea}
+          onClick={() => {
+            setRegen(true);
+            generateLogoDesignIdea();
+          }}
           className="bg-powder-600 hover:bg-powder-700 text-white font-bold py-2 px-4 rounded-full"
           disabled={loading} // Disable button when loading
         >
-          {loading ? "Regenerating..." : "Regenerate Ideas"}
+          {loading ? "Generating..." : "Regenerate Ideas"}
         </button>
       </div>
       <div className="my-10">
@@ -57,10 +83,12 @@ function LogoIdea({ onHandleInputChange, formData }) {
           description={Lookup.LogoIdeaDesc}
         />
         <div className="flex items-center justify-center">
-          {loading && <Loader2Icon className="animate-spin my-10 size-24 text-powder-600" />}
+          {loading && (
+            <Loader2Icon className="animate-spin my-10 size-24 text-powder-600" />
+          )}
         </div>
         <div className="flex flex-wrap gap-3 mt-6">
-          {ideas &&
+          {!loading && ideas &&
             ideas.map((item, index) => (
               <h2
                 key={index}
@@ -69,8 +97,8 @@ function LogoIdea({ onHandleInputChange, formData }) {
                   onHandleInputChange(item);
                 }}
                 className={`p-2 rounded-full bg-powder-500 text-lightsand-700 font-bold border px-3 cursor-pointer
-            hover:border-powder-700 hover:text-black ${
-              selectedOption == item && "border-powder-600 text-black"
+            hover:border-powder-700 hover:text-white hover:bg-powder-600 ${
+              selectedOption == item && "border-powder-600 text-white bg-powder-600"
             }`}
               >
                 {item}
@@ -83,9 +111,9 @@ function LogoIdea({ onHandleInputChange, formData }) {
                 onHandleInputChange("Let AI Select the best idea");
               }}
               className={`p-2 rounded-full bg-powder-500 text-lightsand-700 font-bold border px-3 cursor-pointer
-            hover:border-powder-600 hover:text-black ${
+            hover:border-powder-600 hover:text-white hover:bg-powder-600 ${
               selectedOption == "Let AI Select the best idea" &&
-              "border-powder-600 text-black"
+              "border-powder-600 text-white bg-powder-600"
             }`}
             >
               Let AI Select the best idea

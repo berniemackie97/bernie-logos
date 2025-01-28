@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LogoTitle from "./components/LogoTitle";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -14,12 +14,16 @@ function CreateLogo() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState();
 
+    // Clear localStorage when the component mounts
+    useEffect(() => {
+      localStorage.removeItem("logoIdeas");
+    }, []);
+
   const onHandleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
-    console.log(formData);
   };
 
   return (
@@ -58,8 +62,8 @@ function CreateLogo() {
               leftAnimate && "animate-rubberband"
             } bg-powder-500 text-lightsand-100 font-bold border shadow-md p-6 rounded-md text-2xl w-36 md:w-44 active:shadow-inner shadow-slate-500`}
             onClick={() => {
-              setStep(step - 1);
               setLeftAnimate(true);
+              setStep(step - 1);
             }}
             onAnimationEnd={() => setLeftAnimate(false)}
           >
@@ -71,8 +75,8 @@ function CreateLogo() {
             rightAnimate && "animate-rubberband"
           } bg-powder-500 text-lightsand-100 shadow-slate-500 font-bold border shadow-md p-6 rounded-md text-2xl w-36 md:w-44 active:shadow-inner `}
           onClick={() => {
-            setStep(step + 1);
             setRightAnimate(true);
+            setStep(step + 1);
           }}
           onAnimationEnd={() => setRightAnimate(false)}
         >

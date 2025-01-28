@@ -11,7 +11,7 @@ function LogoDesc({onHandleInputChange, formData}) {
       />
       <input
         type="text"
-        placeholder={Lookup.InputTitlePlaceholder}
+        placeholder={Lookup.LogoDescTitle}
         className="bg-eggshell-400 p-4 mt-5 w-full border rounded-lg shadow-md outline-none"
         defaultValue={formData?.desc}
         onChange={(e) => onHandleInputChange(e.target.value)}

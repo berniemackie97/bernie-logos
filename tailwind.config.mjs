@@ -36,7 +36,7 @@ export default {
       animation: {
         heartbeat: "heartbeat 1.6s ease-out",
         wiggle: "wiggle 200ms ease-in-out",
-        rubberband: "rubberband 0.4s ease-in-out",
+        rubberband: "rubberband 0.5s ease-in-out",
       },
       colors: {
         lightsand: {
